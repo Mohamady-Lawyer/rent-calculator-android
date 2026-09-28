@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="theme-color" content="#0d1117">
+<title>حاسبة الزيادة السنوية للإيجار</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+* {
+  box-sizing: border-box;
+  font-family: "Space Grotesk", "Segoe UI", Tahoma, Arial, sans-serif;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  min-height: 100%;
+}
+
+:root {
+  /* Light mode — warm ivory, professional */
+  --bg-page: #f6f3ec;
+  --card-grad-1: #fffdf8;
+  --card-grad-2: #f6f3ec;
+  --card-border: #e2d9c3;
+  --top-glow: #185fa5;
+  --title-color: #1c2b3a;
+  --icon-bg: #fffdf8;
+  --icon-border: #e2d9c3;
+  --icon-color: #185fa5;
+  --input-bg: #fffdf8;
+  --input-border: #e2d9c3;
+  --input-focus-border: #185fa5;
+  --input-focus-ring: rgba(24, 95, 165, 0.12);
+  --label-color: #8a7f66;
+  --input-text: #23201a;
+  --divider-color: #e2d9c3;
+  --result-grad-1: rgba(24, 95, 165, 0.1);
+  --result-grad-2: rgba(24, 95, 165, 0.03);
+  --result-border: rgba(24, 95, 165, 0.3);
+  --result-label-color: #185fa5;
+  --result-value-color: #1c2b3a;
+  --result-value-glow: rgba(24, 95, 165, 0.15);
+
+  --accent-1: #185fa5;
+  --accent-2: #0d3f70;
+  --gold: #c9a84c;
+  --muted: #8a7f66;
+  --danger: #a32d2d;
+  --error-bg: #fbe9e9;
+}
+
+html {
+  background: #f6f3ec;
+}
+
+html:has(body.dark) {
+  background: #05070a;
+}
+
+body {
+  background: var(--bg-page);
+  color: var(--input-text);
+  transition: background 0.2s ease, color 0.2s ease;
+  min-height: 100vh;
+  padding: 16px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+body.dark {
+  /* Dark mode — royal blue / gold, professional & rich */
+  --bg-page: #05070a;
+  --card-grad-1: #0d1420;
+  --card-grad-2: #0a0f18;
+  --card-border: #1e2a3d;
+  --top-glow: #d4af37;
+  --title-color: #eef2f8;
+  --icon-bg: #0f1826;
+  --icon-border: #1e2a3d;
+  --icon-color: #d4af37;
+  --input-bg: #0a0f18;
+  --input-border: #1e2a3d;
+  --input-focus-border: #4a90d9;
+  --input-focus-ring: rgba(74, 144, 217, 0.1);
+  --label-color: #6b7a90;
+  --input-text: #eef2f8;
+  --divider-color: #1e2a3d;
+  --result-grad-1: rgba(74, 144, 217, 0.12);
+  --result-grad-2: rgba(74, 144, 217, 0.03);
+  --result-border: rgba(74, 144, 217, 0.3);
+  --result-label-color: #d4af37;
+  --result-value-color: #eef2f8;
+  --result-value-glow: rgba(74, 144, 217, 0.3);
+
+  --accent-1: #4a90d9;
+  --accent-2: #d4af37;
+  --gold: #d4af37;
+  --muted: #6b7a90;
+  --danger: #ff6b5b;
+  --error-bg: #3a1616;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.page-title {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--title-color);
+  letter-spacing: 0.02em;
+}
+
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--icon-border);
+  background: var(--icon-bg);
+  cursor: pointer;
+  font-size: 15px;
+  border-radius: 8px;
+  color: var(--icon-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.icon-btn:hover {
+  border-color: var(--icon-color);
+  box-shadow: 0 0 8px var(--result-border);
+}
+
+/* ===== Lawyer info box ===== */
+.lawyer-box {
+  position: relative;
+  background: linear-gradient(135deg, var(--card-grad-1) 0%, var(--card-grad-2) 100%);
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  padding: 14px 16px;
+  text-align: center;
+  margin-bottom: 16px;
+  overflow: hidden;
+  box-shadow: 0 0 18px rgba(212, 175, 55, 0.18);
+}
+
+.lawyer-box::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.lawyer-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.02em;
+  margin-bottom: 3px;
+}
+
+.lawyer-title {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.lawyer-phone {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: "JetBrains Mono", monospace;
+  color: var(--accent-1);
+  direction: ltr;
+  display: inline-block;
+  letter-spacing: 0.03em;
+}
+
+/* ===== Glassy card shell ===== */
+.card {
+  position: relative;
+  background: linear-gradient(180deg, var(--card-grad-1) 0%, var(--card-grad-2) 100%);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 16px;
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--top-glow), transparent);
+  opacity: 0.6;
+}
+
+.field {
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.field label {
+  display: block;
+  font-size: 12px;
+  color: var(--label-color);
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+
+.field input {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  font-family: "JetBrains Mono", monospace;
+  text-align: center;
+  border: 1px solid var(--input-border);
+  border-radius: 10px;
+  background: var(--input-bg);
+  color: var(--input-text);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+}
+
+.field input[type="number"] {
+  direction: ltr;
+}
+
+.field input:focus {
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 3px var(--input-focus-ring);
+}
+
+.field input:hover {
+  border-color: var(--accent-1);
+}
+
+.calc-btn {
+  width: 100%;
+  padding: 13px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0 16px var(--result-border);
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+
+.calc-btn:hover {
+  opacity: 0.92;
+}
+
+.calc-btn:active {
+  transform: translateY(1px);
+}
+
+.error-box {
+  background: var(--error-bg);
+  color: var(--danger);
+  font-size: 13px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-top: 14px;
+}
+
+.result-box {
+  background: linear-gradient(135deg, var(--result-grad-1), var(--result-grad-2));
+  border: 1px solid var(--result-border);
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+  margin-top: 14px;
+}
+
+.result-label {
+  font-size: 11px;
+  color: var(--result-label-color);
+  margin: 0 0 6px;
+  letter-spacing: 0.02em;
+}
+
+.result-value {
+  font-size: 21px;
+  font-weight: 700;
+  font-family: "JetBrains Mono", monospace;
+  margin: 0;
+  color: var(--result-value-color);
+  text-shadow: 0 0 10px var(--result-value-glow);
+}
+
+.result-sub {
+  font-size: 10.5px;
+  color: var(--muted);
+  margin: 6px 0 0;
+  line-height: 1.5;
+}
+
+.section-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--label-color);
+  margin: 20px 0 0;
+  letter-spacing: 0.02em;
+}
+</style>
+</head>
+<body class="dark">
+<div class="container">
+  <div class="page-header">
+    <span class="page-title">حاسبة الزيادة السنوية للإيجار</span>
+    <button id="darkToggle" class="icon-btn" title="الوضع الليلي">☀️</button>
+  </div>
+
+  <div class="lawyer-box">
+    <div class="lawyer-name">أسامة محمدي</div>
+    <div class="lawyer-title">المحامي بالإستئناف العالي ومجلس الدولة</div>
+    <div class="lawyer-phone">01006569629</div>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label for="contractDate">تاريخ بداية التعاقد</label>
+      <input type="date" id="contractDate">
+    </div>
+
+    <div class="field">
+      <label for="startRent">الأجرة وقت التعاقد (جنيه)</label>
+      <input type="number" id="startRent" step="any" placeholder="مثال: 4.5" inputmode="decimal">
+    </div>
+
+    <div class="field">
+      <label for="increaseRate">نسبة الزيادة السنوية (%)</label>
+      <input type="number" id="increaseRate" step="any" placeholder="مثال: 15" inputmode="decimal">
+    </div>
+
+    <button id="calcBtn" class="calc-btn">احسب الأجرة الحالية</button>
+
+    <div id="errorBox" class="error-box" style="display:none;"></div>
+
+    <div class="result-box">
+      <p class="result-label">الأجرة المستحقة حالياً</p>
+      <p id="resultValue" class="result-value">—</p>
+      <p id="resultSub" class="result-sub"></p>
+      <p id="lastIncreaseDate" class="result-sub"></p>
+    </div>
+
+    <p class="section-label">إجمالي الأجرة المحصلة (مع الزيادة السنوية)</p>
+    <div class="result-box" style="margin-top:8px;">
+      <p class="result-label">من بداية التعاقد حتى اليوم</p>
+      <p id="totalCollectedValue" class="result-value">—</p>
+      <p id="totalCollectedSub" class="result-sub"></p>
+    </div>
+
+    <p class="section-label">إجمالي الأجرة بدون أي زيادة (للمقارنة)</p>
+    <div class="result-box" style="margin-top:8px;">
+      <p class="result-label">لو ظلت الأجرة ثابتة طوال المدة</p>
+      <p id="totalFlatValue" class="result-value">—</p>
+      <p id="totalFlatSub" class="result-sub"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+const darkToggle = document.getElementById('darkToggle');
+const calcBtn = document.getElementById('calcBtn');
+const errorBox = document.getElementById('errorBox');
+const resultValue = document.getElementById('resultValue');
+const resultSub = document.getElementById('resultSub');
+const lastIncreaseDate = document.getElementById('lastIncreaseDate');
+const totalCollectedValue = document.getElementById('totalCollectedValue');
+const totalCollectedSub = document.getElementById('totalCollectedSub');
+const totalFlatValue = document.getElementById('totalFlatValue');
+const totalFlatSub = document.getElementById('totalFlatSub');
+
+function applyTheme(theme) {
+  document.body.classList.toggle('dark', theme === 'dark');
+  darkToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+}
+
+const savedTheme = localStorage.getItem('rentCalcTheme');
+applyTheme(savedTheme === 'light' ? 'light' : 'dark');
+
+darkToggle.addEventListener('click', () => {
+  const isDark = document.body.classList.contains('dark');
+  const newTheme = isDark ? 'light' : 'dark';
+  applyTheme(newTheme);
+  localStorage.setItem('rentCalcTheme', newTheme);
+});
+
+function showError(msg) {
+  errorBox.textContent = msg;
+  errorBox.style.display = 'block';
+}
+
+function clearError() {
+  errorBox.style.display = 'none';
+  errorBox.textContent = '';
+}
+
+function calcFullYearsBetween(startDate, today) {
+  let years = today.getFullYear() - startDate.getFullYear();
+  const anniversaryPassed =
+    today.getMonth() > startDate.getMonth() ||
+    (today.getMonth() === startDate.getMonth() && today.getDate() >= startDate.getDate());
+  if (!anniversaryPassed) years -= 1;
+  return Math.max(years, 0);
+}
+
+// عدد الشهور الكاملة من بداية العقد، شامل الشهر الحالي (لأن الأجرة تُدفع مقدماً)
+function calcFullMonthsIncludingCurrent(startDate, today) {
+  const months = (today.getFullYear() - startDate.getFullYear()) * 12
+    + (today.getMonth() - startDate.getMonth()) + 1;
+  return Math.max(months, 0);
+}
+
+// إجمالي التحصيل مع الزيادة السنوية المركبة: مجموع (أجرة كل سنة كاملة × 12 شهر) + شهور السنة الجارية غير المكتملة
+function calcTotalCollectedWithIncrease(startRent, rate, fullYears, startDate, today) {
+  let total = 0;
+  let currentRent = startRent;
+  for (let y = 0; y < fullYears; y++) {
+    total += currentRent * 12;
+    currentRent = currentRent * (1 + rate);
+  }
+  // الشهور من بداية السنة الحالية (بعد آخر زيادة) حتى الشهر الحالي شاملاً
+  const currentYearStart = new Date(startDate);
+  currentYearStart.setFullYear(startDate.getFullYear() + fullYears);
+  const monthsInCurrentYear = (today.getFullYear() - currentYearStart.getFullYear()) * 12
+    + (today.getMonth() - currentYearStart.getMonth()) + 1;
+  if (monthsInCurrentYear > 0) {
+    total += currentRent * monthsInCurrentYear;
+  }
+  return total;
+}
+
+const fieldOrder = ['contractDate', 'startRent', 'increaseRate'];
+
+fieldOrder.forEach((id, index) => {
+  const el = document.getElementById(id);
+  el.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    const isLast = index === fieldOrder.length - 1;
+    if (isLast) {
+      calcBtn.click();
+    } else {
+      document.getElementById(fieldOrder[index + 1]).focus();
+    }
+  });
+});
+
+calcBtn.addEventListener('click', () => {
+  clearError();
+
+  const dateStr = document.getElementById('contractDate').value;
+  const startRentStr = document.getElementById('startRent').value;
+  const rateStr = document.getElementById('increaseRate').value;
+
+  if (!dateStr) {
+    showError('من فضلك أدخل تاريخ بداية التعاقد');
+    return;
+  }
+  if (startRentStr === '' || isNaN(Number(startRentStr)) || Number(startRentStr) <= 0) {
+    showError('من فضلك أدخل قيمة صحيحة للأجرة');
+    return;
+  }
+  if (rateStr === '' || isNaN(Number(rateStr)) || Number(rateStr) < 0) {
+    showError('من فضلك أدخل نسبة زيادة صحيحة');
+    return;
+  }
+
+  const startDate = new Date(dateStr);
+  const today = new Date();
+
+  if (startDate > today) {
+    showError('تاريخ التعاقد لا يمكن أن يكون في المستقبل');
+    return;
+  }
+
+  const startRent = Number(startRentStr);
+  const rate = Number(rateStr) / 100;
+
+  const years = calcFullYearsBetween(startDate, today);
+  const finalRent = startRent * Math.pow(1 + rate, years);
+
+  resultValue.textContent = finalRent.toLocaleString('ar-EG', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }) + ' جنيه';
+  resultSub.textContent = 'بعد ' + years + ' سنة زيادة';
+
+  if (years > 0) {
+    const lastIncrease = new Date(startDate);
+    lastIncrease.setFullYear(startDate.getFullYear() + years);
+    const day = String(lastIncrease.getDate()).padStart(2, '0');
+    const month = String(lastIncrease.getMonth() + 1).padStart(2, '0');
+    const year = lastIncrease.getFullYear();
+    lastIncreaseDate.textContent = 'آخر زيادة بتاريخ ' + day + '/' + month + '/' + year;
+  } else {
+    lastIncreaseDate.textContent = 'لم يتم تطبيق أي زيادة بعد';
+  }
+
+  const totalMonths = calcFullMonthsIncludingCurrent(startDate, today);
+
+  const totalWithIncrease = calcTotalCollectedWithIncrease(startRent, rate, years, startDate, today);
+  totalCollectedValue.textContent = totalWithIncrease.toLocaleString('ar-EG', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }) + ' جنيه';
+  totalCollectedSub.textContent = 'عن ' + totalMonths + ' شهر (' + (totalMonths / 12).toFixed(1) + ' سنة تقريباً)';
+
+  const totalFlat = startRent * totalMonths;
+  totalFlatValue.textContent = totalFlat.toLocaleString('ar-EG', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }) + ' جنيه';
+  totalFlatSub.textContent = 'عن ' + totalMonths + ' شهر بأجرة ثابتة ' + startRent + ' جنيه';
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "com.momo.rentcalculator",
+  "displayName": "حاسبة الإيجار",
+  "version": "1.0.0",
+  "description": "حاسبة الزيادة السنوية للإيجار",
+  "main": "index.js",
+  "license": "Apache-2.0",
+  "dependencies": {},
+  "devDependencies": {},
+  "cordova": {
+    "platforms": []
+  }
+}

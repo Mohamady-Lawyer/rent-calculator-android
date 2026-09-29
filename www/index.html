@@ -317,19 +317,90 @@ body.dark {
   margin: 20px 0 0;
   letter-spacing: 0.02em;
 }
+
+.header-btns {
+  display: flex;
+  gap: 6px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ===== Welcome / entry screen ===== */
+.welcome-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.welcome-inner {
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+}
+
+.welcome-icon {
+  font-size: 44px;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 0 14px rgba(212, 175, 55, 0.35));
+}
+
+.welcome-title {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--title-color);
+  margin: 0 0 26px;
+  letter-spacing: 0.02em;
+}
+
+.welcome-credit {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0 0 8px;
+  letter-spacing: 0.04em;
+}
+
+.welcome-screen .lawyer-box {
+  margin-bottom: 22px;
+}
+
+.enter-btn {
+  font-size: 16px;
+  padding: 14px;
+}
 </style>
 </head>
 <body class="dark">
-<div class="container">
-  <div class="page-header">
-    <span class="page-title">حاسبة الزيادة السنوية للإيجار</span>
-    <button id="darkToggle" class="icon-btn" title="الوضع الليلي">☀️</button>
-  </div>
 
-  <div class="lawyer-box">
-    <div class="lawyer-name">أسامة محمدي</div>
-    <div class="lawyer-title">المحامي بالإستئناف العالي ومجلس الدولة</div>
-    <div class="lawyer-phone">01006569629</div>
+<!-- ============ WELCOME / ENTRY SCREEN ============ -->
+<div id="welcomeScreen" class="welcome-screen">
+  <div class="welcome-inner">
+    <div class="welcome-icon">⚖️</div>
+    <h1 class="welcome-title">حاسبة الزيادة السنوية للإيجار</h1>
+
+    <p class="welcome-credit">مبرمج ومصمم لصالح</p>
+
+    <div class="lawyer-box">
+      <div class="lawyer-name">أسامة محمدي</div>
+      <div class="lawyer-title">المحامي بالإستئناف العالي ومجلس الدولة</div>
+      <div class="lawyer-phone">01006569629</div>
+    </div>
+
+    <button id="enterBtn" class="calc-btn enter-btn">دخول</button>
+  </div>
+</div>
+
+<!-- ============ CALCULATOR ============ -->
+<div id="calcScreen" class="container hidden">
+  <div class="page-header">
+    <div class="header-btns">
+      <button id="homeBtn" class="icon-btn" title="الشاشة الرئيسية">🏠</button>
+      <button id="darkToggle" class="icon-btn" title="الوضع الليلي">☀️</button>
+    </div>
+    <span class="page-title">حاسبة الزيادة السنوية للإيجار</span>
   </div>
 
   <div class="card">
@@ -376,6 +447,26 @@ body.dark {
 </div>
 
 <script>
+const welcomeScreen = document.getElementById('welcomeScreen');
+const calcScreen = document.getElementById('calcScreen');
+const enterBtn = document.getElementById('enterBtn');
+const homeBtn = document.getElementById('homeBtn');
+
+function showCalculator() {
+  welcomeScreen.classList.add('hidden');
+  calcScreen.classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+
+function showWelcome() {
+  calcScreen.classList.add('hidden');
+  welcomeScreen.classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+
+enterBtn.addEventListener('click', showCalculator);
+homeBtn.addEventListener('click', showWelcome);
+
 const darkToggle = document.getElementById('darkToggle');
 const calcBtn = document.getElementById('calcBtn');
 const errorBox = document.getElementById('errorBox');
